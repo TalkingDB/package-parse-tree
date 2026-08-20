@@ -5,6 +5,81 @@ import httpx
 NEL_SERVER = os.environ.get("NEL_SERVER", "http://localhost:8092")
 
 
+class NELEntityConflict(Exception):
+    """The entity already exists (NEL returned 409)."""
+
+
+class NELEntityNotFound(Exception):
+    """The entity does not exist (NEL returned 404)."""
+
+
+async def get_entity(namespace: str, entity_id: str) -> dict | None:
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{NEL_SERVER}/api/namespaces/{namespace}/entities/{entity_id}")
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        return response.json()
+
+
+async def create_entity(
+    namespace: str, entity_id: str, label: str, surface_texts: list[str]
+) -> dict:
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{NEL_SERVER}/api/namespaces/{namespace}/entities",
+            json={"entity_id": entity_id, "label": label, "surface_texts": surface_texts},
+        )
+        if response.status_code == 409:
+            raise NELEntityConflict(entity_id)
+        response.raise_for_status()
+        return response.json()
+
+
+async def update_entity_surface_texts(
+    namespace: str, entity_id: str, surface_texts: list[str]
+) -> dict:
+    async with httpx.AsyncClient() as client:
+        response = await client.patch(
+            f"{NEL_SERVER}/api/namespaces/{namespace}/entities/{entity_id}",
+            json={"surface_texts": surface_texts},
+        )
+        if response.status_code == 404:
+            raise NELEntityNotFound(entity_id)
+        response.raise_for_status()
+        return response.json()
+
+
+async def add_entity_surface_text(namespace: str, entity_id: str, surface_text: str) -> dict | None:
+    """Returns None (no-op) if the surface text is already registered -
+    NEL has no dedicated "remove one surface text" endpoint, only this
+    additive one plus a full-replace PATCH, so callers that need removal
+    read the current entity and PATCH the reduced list instead."""
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{NEL_SERVER}/api/namespaces/{namespace}/entities/{entity_id}/surface-texts",
+            json={"surface_text": surface_text},
+        )
+        if response.status_code == 409:
+            return None
+        if response.status_code == 404:
+            raise NELEntityNotFound(entity_id)
+        response.raise_for_status()
+        return response.json()
+
+
+async def upsert_entity(
+    namespace: str, entity_id: str, label: str, surface_texts: list[str]
+) -> dict:
+    """Create the entity, or update its surface texts if it already exists."""
+
+    try:
+        return await create_entity(namespace, entity_id, label, surface_texts)
+    except NELEntityConflict:
+        return await update_entity_surface_texts(namespace, entity_id, surface_texts)
+
+
 async def extract_and_link(
     namespace: str, text: str, word_correction: bool = False
 ) -> dict:
