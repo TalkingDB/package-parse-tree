@@ -1,3 +1,25 @@
+import re
+
+
+def return_num(text: str) -> list:
+    """Extract a numeric value from text (e.g. "128GB" -> [128, "int"]).
+    Concatenates every digit/dot run found (not just the first), then tries
+    int before float. Returns [] if nothing parses - ported as-is."""
+
+    matches = re.findall(r"[\d\.]+", text)
+    if not matches:
+        return []
+
+    joined = "".join(matches)
+    try:
+        return [int(joined), "int"]
+    except ValueError:
+        try:
+            return [float(text), "float"]
+        except ValueError:
+            return []
+
+
 def attr_sort_order(comparator: dict) -> str | None:
     """Sort direction implied by a comparator, for numeric range attributes
     (e.g. ">=", "<"). Reference-type comparators like "uid_in" have no

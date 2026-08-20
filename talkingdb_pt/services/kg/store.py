@@ -23,6 +23,11 @@ class OntologyBundle:
     tenant: EntityModel
     graph: nx.MultiDiGraph
     entity_conn: sqlite3.Connection
+    # Cache slot for the literal-attribute lookup maps (talkingdb_pt.services
+    # .parsing.literal_maps) - expensive to rebuild per-request, invalidated
+    # whenever this bundle is saved. Not populated here to avoid a circular
+    # import; parsing.literal_maps owns writing to it.
+    literal_maps: object = None
 
     def refresh_graph(self) -> None:
         # nx.compose(G, H): H's node/edge attributes win on collision, so
@@ -272,3 +277,12 @@ def save(bundle: OntologyBundle) -> None:
         bundle.universal.save(bundle.entity_conn)
 
     bundle.refresh_graph()
+    bundle.literal_maps = None  # invalidate cached literal-attribute maps
+
+
+def nodes_with_scalar_set(bundle: OntologyBundle, field: str) -> list[str]:
+    """node_ids that have a non-null value for the given scalar ontology
+    property - replaces KGHandler.get_nodes_having_predicate() for scalar
+    (non-edge) predicates."""
+
+    return ontology_store.list_nodes_with_property(bundle.entity_conn, bundle.namespace, field)

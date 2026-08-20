@@ -267,3 +267,23 @@ def get_node_properties(
             return result
 
     return None
+
+
+def list_nodes_with_property(
+    conn: sqlite3.Connection, namespace: str, field: str
+) -> list[str]:
+    """node_ids (universal + namespace) that have a non-null value set for
+    the given scalar property column. Replaces the legacy
+    KGHandler.get_nodes_having_predicate() for scalar (non-edge)
+    predicates like "shorthands"."""
+
+    if field not in _PROPERTY_COLUMNS:
+        raise ValueError(f"unknown node property: {field}")
+
+    rows = conn.execute(
+        f"SELECT DISTINCT node_id FROM ontology_node_properties "  # noqa: S608
+        f"WHERE namespace IN (?, ?) AND {field} IS NOT NULL",
+        (namespace, UNIVERSAL_NAMESPACE),
+    ).fetchall()
+
+    return [row["node_id"] for row in rows]
