@@ -1,0 +1,65 @@
+[project]
+name = "package-parse-tree"
+version = "0.1.0"
+description = "Ontology-driven natural-language query parser: given a type/instance/attribute ontology, parses free-text queries into structured knowledge-graph queries."
+authors = [
+    { name = "immkg", email = "mayank.g@smarter.codes" }
+]
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+
+[tool.poetry]
+packages = [
+    { include = "talkingdb_pt" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.14"
+fastapi = ">=0.125.0,<0.126.0"
+uvicorn = { version = ">=0.38.0,<0.39.0", extras = ["standard"] }
+requests = ">=2.32.5,<3.0.0"
+pydantic = ">=2.12.5,<3.0.0"
+debugpy = ">=1.8.19,<2.0.0"
+networkx = "^3.6.1"
+nltk = "^3.9.1"
+
+talkingdb-models = { git = "git+https://github.com/TalkingDB/base-tdb-models.git", rev = "9567ddad4bbb9a4306f733be8afde6f790a19684" }
+talkingdb-clients = { git = "git+https://github.com/TalkingDB/base-tdb-clients.git", rev = "9931c1f832d4772f5137cdc4bb193daadab2ad30" }
+talkingdb-helpers = { git = "git+https://github.com/TalkingDB/base-tdb-helpers.git", rev = "729a7b052b721c14801071faa7e3324bf4a0bd49" }
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4"
+pytest-cov = "^7.0"
+pytest-mock = "^3.15"
+httpx = "^0.28.1"
+ruff = "^0.16.1"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+]
+
+[tool.coverage.run]
+source = ["talkingdb_pt"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
