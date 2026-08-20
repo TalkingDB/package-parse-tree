@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from talkingdb_pt import __version__
-from talkingdb_pt.api import ontology
+from talkingdb_pt.api import extract, ontology
 
 OPENAPI_TAGS = [
     {
@@ -40,3 +40,4 @@ app.add_middleware(
 )
 
 app.include_router(ontology.router)
+app.include_router(extract.router)
