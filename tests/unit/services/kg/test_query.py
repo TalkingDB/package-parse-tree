@@ -12,13 +12,29 @@ def build_products(bundle):
     upsert_node(bundle, "smartphone", label="Category")
     upsert_node(bundle, "laptop", label="Category")
 
-    upsert_node(bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15", "iPhone15"], scalar_props={"src_name": "iPhone 15", "range_min": 500})
+    upsert_node(
+        bundle,
+        "iphone-15",
+        label="Instance",
+        surface_texts=["iPhone 15", "iPhone15"],
+        scalar_props={"src_name": "iPhone 15", "range_min": 500},
+    )
     upsert_edge(bundle, "iphone-15", "instance_of", "smartphone")
 
-    upsert_node(bundle, "pixel-9", label="Instance", scalar_props={"src_name": "Pixel 9", "range_min": 700})
+    upsert_node(
+        bundle,
+        "pixel-9",
+        label="Instance",
+        scalar_props={"src_name": "Pixel 9", "range_min": 700},
+    )
     upsert_edge(bundle, "pixel-9", "instance_of", "smartphone")
 
-    upsert_node(bundle, "thinkpad", label="Instance", scalar_props={"src_name": "ThinkPad", "range_min": 1000})
+    upsert_node(
+        bundle,
+        "thinkpad",
+        label="Instance",
+        scalar_props={"src_name": "ThinkPad", "range_min": 1000},
+    )
     upsert_edge(bundle, "thinkpad", "instance_of", "laptop")
 
 
@@ -35,7 +51,9 @@ def test_run_filter_query_base_excludes_non_instances(bundle):
 def test_run_filter_query_filters_by_instance_of(bundle):
     build_products(bundle)
 
-    results = run_filter_query(bundle, filters=[{"field": "instance_of", "value": "smartphone"}])
+    results = run_filter_query(
+        bundle, filters=[{"field": "instance_of", "value": "smartphone"}]
+    )
 
     ids = {r["node_id"] for r in results}
     assert ids == {"iphone-15", "pixel-9"}
@@ -60,7 +78,9 @@ def test_run_filter_query_sorts_ascending_and_descending(bundle):
     build_products(bundle)
 
     asc = run_filter_query(bundle, sorters=[{"field": "range_min", "direction": "asc"}])
-    desc = run_filter_query(bundle, sorters=[{"field": "range_min", "direction": "desc"}])
+    desc = run_filter_query(
+        bundle, sorters=[{"field": "range_min", "direction": "desc"}]
+    )
 
     assert [r["node_id"] for r in asc] == ["iphone-15", "pixel-9", "thinkpad"]
     assert [r["node_id"] for r in desc] == ["thinkpad", "pixel-9", "iphone-15"]
@@ -80,10 +100,15 @@ def test_run_filter_query_projects_requested_fields_only(bundle):
     build_products(bundle)
 
     results = run_filter_query(
-        bundle, filters=[{"field": "instance_of", "value": "smartphone"}], fields=["src_name"]
+        bundle,
+        filters=[{"field": "instance_of", "value": "smartphone"}],
+        fields=["src_name"],
     )
 
-    assert all(set(r.keys()) == {"node_id", "label", "surface_texts", "src_name"} for r in results)
+    assert all(
+        set(r.keys()) == {"node_id", "label", "surface_texts", "src_name"}
+        for r in results
+    )
 
 
 def test_run_filter_query_rejects_non_positive_limit(bundle):

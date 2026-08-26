@@ -7,17 +7,29 @@ from talkingdb_pt.services.parsing.sentence import parse_input
 
 
 def build_smartphone_ontology(bundle):
-    upsert_node(bundle, "smartphone", label="Class_Type_Category", scalar_props={"contains": "instances", "src_name": "Smartphone"})
+    upsert_node(
+        bundle,
+        "smartphone",
+        label="Class_Type_Category",
+        scalar_props={"contains": "instances", "src_name": "Smartphone"},
+    )
     upsert_node(bundle, "iphone-15", label="Instance_Type_Smartphone")
     upsert_edge(bundle, "iphone-15", "instance_of", "smartphone")
 
-    upsert_node(bundle, "color", label="Class_Type_Attribute", scalar_props={"contains": "attributes"})
+    upsert_node(
+        bundle,
+        "color",
+        label="Class_Type_Attribute",
+        scalar_props={"contains": "attributes"},
+    )
     upsert_node(bundle, "red", label="Instance_Type_Color")
     upsert_edge(bundle, "red", "instance_of", "color")
     upsert_edge(bundle, "smartphone", "has_attributes", "color")
 
 
-def fake_nel_response(universal_entities=None, regex_entities=None, no_tag_entities=None):
+def fake_nel_response(
+    universal_entities=None, regex_entities=None, no_tag_entities=None
+):
     return {
         "universal_entities": universal_entities or [],
         "regex_entities": regex_entities or [],
@@ -36,14 +48,22 @@ async def test_parse_input_builds_category_with_instance_and_attribute(bundle):
                 "surface_text": "iphone 15",
                 "corrected_text": "iphone 15",
                 "score": 0,
-                "entities": [{"entity_id": "iphone-15", "label": "Instance", "surface_text": "iphone 15"}],
+                "entities": [
+                    {
+                        "entity_id": "iphone-15",
+                        "label": "Instance",
+                        "surface_text": "iphone 15",
+                    }
+                ],
             },
             {
                 "index": [10, 13],
                 "surface_text": "red",
                 "corrected_text": "red",
                 "score": 0,
-                "entities": [{"entity_id": "red", "label": "Instance", "surface_text": "red"}],
+                "entities": [
+                    {"entity_id": "red", "label": "Instance", "surface_text": "red"}
+                ],
             },
         ],
     )
@@ -69,7 +89,12 @@ async def test_parse_input_builds_category_with_instance_and_attribute(bundle):
 
 @pytest.mark.anyio
 async def test_parse_input_no_categories_falls_back_to_misc_group(bundle):
-    upsert_node(bundle, "color", label="Class_Type_Attribute", scalar_props={"contains": "attributes"})
+    upsert_node(
+        bundle,
+        "color",
+        label="Class_Type_Attribute",
+        scalar_props={"contains": "attributes"},
+    )
     upsert_node(bundle, "red", label="Instance_Type_Color")
     upsert_edge(bundle, "red", "instance_of", "color")
 
@@ -80,7 +105,9 @@ async def test_parse_input_no_categories_falls_back_to_misc_group(bundle):
                 "surface_text": "red",
                 "corrected_text": "red",
                 "score": 0,
-                "entities": [{"entity_id": "red", "label": "Instance", "surface_text": "red"}],
+                "entities": [
+                    {"entity_id": "red", "label": "Instance", "surface_text": "red"}
+                ],
             }
         ]
     )

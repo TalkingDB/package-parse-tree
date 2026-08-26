@@ -19,8 +19,9 @@ router = APIRouter(
 
 class KGFilterClause(BaseModel):
     field: str = Field(
-        ..., description="Scalar ontology property name, or an edge predicate "
-        "(instance_of, subclass_of, has_attributes, has_units, default_unit)."
+        ...,
+        description="Scalar ontology property name, or an edge predicate "
+        "(instance_of, subclass_of, has_attributes, has_units, default_unit).",
     )
     op: str = Field("eq", description="eq | ge | gt | le | lt | in")
     value: Any
@@ -37,7 +38,8 @@ class KGDataQuery(BaseModel):
     limit: int = 20
     offset: int = 0
     fields: list[str] | None = Field(
-        None, description="Scalar fields to include in each result. Omit for the default set."
+        None,
+        description="Scalar fields to include in each result. Omit for default set.",
     )
 
 
@@ -69,7 +71,9 @@ async def get_kg_data(
     try:
         return run_filter_query(bundle, **_as_kwargs(query))
     except ValueError as exc:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)
+        ) from exc
 
 
 @router.post("/data/filters/multiple")

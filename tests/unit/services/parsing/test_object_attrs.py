@@ -11,7 +11,9 @@ def ner_entry(entity_id, location, surface_text=None):
 
 
 def test_single_attr_class_resolved_for_value(bundle):
-    upsert_node(bundle, "color", label="AttributeClass", scalar_props={"contains": "attributes"})
+    upsert_node(
+        bundle, "color", label="AttributeClass", scalar_props={"contains": "attributes"}
+    )
     upsert_node(bundle, "red", label="AttributeValue")
     upsert_edge(bundle, "red", "instance_of", "color")
     upsert_node(bundle, "smartphone", label="Category")
@@ -49,8 +51,15 @@ def test_unresolvable_entity_produces_no_rows(bundle):
 
 
 def test_multiple_attr_classes_without_exact_mention_includes_all(bundle):
-    upsert_node(bundle, "color", label="AttributeClass", scalar_props={"contains": "attributes"})
-    upsert_node(bundle, "finish", label="AttributeClass", scalar_props={"contains": "attributes"})
+    upsert_node(
+        bundle, "color", label="AttributeClass", scalar_props={"contains": "attributes"}
+    )
+    upsert_node(
+        bundle,
+        "finish",
+        label="AttributeClass",
+        scalar_props={"contains": "attributes"},
+    )
     upsert_node(bundle, "matte", label="AttributeValue")
     upsert_edge(bundle, "matte", "instance_of", "color")
     upsert_edge(bundle, "matte", "instance_of", "finish")

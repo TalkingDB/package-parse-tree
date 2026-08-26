@@ -23,9 +23,9 @@ pydantic = ">=2.12.5,<3.0.0"
 debugpy = ">=1.8.19,<2.0.0"
 networkx = "^3.6.1"
 
-talkingdb-models = { git = "git+https://github.com/TalkingDB/base-tdb-models.git", rev = "9567ddad4bbb9a4306f733be8afde6f790a19684" }
-talkingdb-clients = { git = "git+https://github.com/TalkingDB/base-tdb-clients.git", rev = "9931c1f832d4772f5137cdc4bb193daadab2ad30" }
-talkingdb-helpers = { git = "git+https://github.com/TalkingDB/base-tdb-helpers.git", rev = "729a7b052b721c14801071faa7e3324bf4a0bd49" }
+talkingdb-models = { git = "git+https://github.com/TalkingDB/base-tdb-models.git", rev = "6ad6e83c8968c718ac95c018f773dc0ba35f8cd1" }
+talkingdb-clients = { git = "git+https://github.com/TalkingDB/base-tdb-clients.git", rev = "29abea220d96efac7b3ecee9deb9f5af49636174" }
+talkingdb-helpers = { git = "git+https://github.com/TalkingDB/base-tdb-helpers.git", rev = "d7c891b8f2cf804aa3e8b1ffc3a4b74f2d282b11" }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4"

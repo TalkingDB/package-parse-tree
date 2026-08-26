@@ -1,5 +1,8 @@
 from talkingdb_pt.services.kg.store import upsert_edge, upsert_node
-from talkingdb_pt.services.parsing.category import add_classes_to_ctg, category_query_similarity
+from talkingdb_pt.services.parsing.category import (
+    add_classes_to_ctg,
+    category_query_similarity,
+)
 
 
 def ner_entry(entity_id, location, surface_text=None):
@@ -11,7 +14,9 @@ def ner_entry(entity_id, location, surface_text=None):
 
 
 def test_single_category_resolved_for_instance(bundle):
-    upsert_node(bundle, "smartphone", label="Category", scalar_props={"contains": "instances"})
+    upsert_node(
+        bundle, "smartphone", label="Category", scalar_props={"contains": "instances"}
+    )
     upsert_node(bundle, "iphone-15", label="Instance")
     upsert_edge(bundle, "iphone-15", "instance_of", "smartphone")
 
@@ -29,7 +34,12 @@ def test_single_category_resolved_for_instance(bundle):
 
 
 def test_bare_category_mention_without_instance(bundle):
-    upsert_node(bundle, "electronics", label="Category", scalar_props={"contains": "instances", "src_name": "Electronics"})
+    upsert_node(
+        bundle,
+        "electronics",
+        label="Category",
+        scalar_props={"contains": "instances", "src_name": "Electronics"},
+    )
 
     ner_output = {"electronics&&0&&3": ner_entry("electronics", [0, 3])}
 
@@ -42,8 +52,12 @@ def test_bare_category_mention_without_instance(bundle):
 
 
 def test_multiple_categories_resolved_by_exact_mention(bundle):
-    upsert_node(bundle, "smartphone", label="Category", scalar_props={"contains": "instances"})
-    upsert_node(bundle, "gift-item", label="Category", scalar_props={"contains": "instances"})
+    upsert_node(
+        bundle, "smartphone", label="Category", scalar_props={"contains": "instances"}
+    )
+    upsert_node(
+        bundle, "gift-item", label="Category", scalar_props={"contains": "instances"}
+    )
     upsert_node(bundle, "iphone-15", label="Instance")
     upsert_edge(bundle, "iphone-15", "instance_of", "smartphone")
     upsert_edge(bundle, "iphone-15", "instance_of", "gift-item")
@@ -62,8 +76,12 @@ def test_multiple_categories_resolved_by_exact_mention(bundle):
 
 def test_multiple_categories_resolved_by_common_ancestor(bundle):
     upsert_node(bundle, "electronics", label="Category")
-    upsert_node(bundle, "smartphone", label="Category", scalar_props={"contains": "instances"})
-    upsert_node(bundle, "gift-item", label="Category", scalar_props={"contains": "instances"})
+    upsert_node(
+        bundle, "smartphone", label="Category", scalar_props={"contains": "instances"}
+    )
+    upsert_node(
+        bundle, "gift-item", label="Category", scalar_props={"contains": "instances"}
+    )
     upsert_edge(bundle, "smartphone", "subclass_of", "electronics")
     upsert_edge(bundle, "gift-item", "subclass_of", "electronics")
     upsert_node(bundle, "iphone-15", label="Instance")

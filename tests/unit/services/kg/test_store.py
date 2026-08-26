@@ -1,7 +1,6 @@
 from talkingdb.models.entity.entity import EntityModel
 
 from talkingdb_pt.services.kg import store as kg_store
-from talkingdb_pt.services.ontology import store as ontology_store
 from tests.conftest import make_bundle
 
 
@@ -47,7 +46,10 @@ def test_find_ancestors_multi_hop_with_fields(bundle):
         bundle, "smartphone", label="Category", scalar_props={"src_name": "Smartphone"}
     )
     kg_store.upsert_node(
-        bundle, "electronics", label="Category", scalar_props={"src_name": "Electronics"}
+        bundle,
+        "electronics",
+        label="Category",
+        scalar_props={"src_name": "Electronics"},
     )
     kg_store.upsert_edge(bundle, "iphone-15", "instance_of", "smartphone")
     kg_store.upsert_edge(bundle, "smartphone", "subclass_of", "electronics")
@@ -114,14 +116,10 @@ def test_source_of_edge_missing_target_returns_none(bundle):
 def test_tenant_overrides_universal_node(memory_conn):
     bundle = make_bundle(memory_conn, "acme")
 
-    kg_store.upsert_node(
-        bundle, "smartphone", label="Category", universal=True
-    )
+    kg_store.upsert_node(bundle, "smartphone", label="Category", universal=True)
     assert kg_store.node_label(bundle, "smartphone") == "Category"
 
-    kg_store.upsert_node(
-        bundle, "smartphone", label="AcmeSpecificCategory"
-    )
+    kg_store.upsert_node(bundle, "smartphone", label="AcmeSpecificCategory")
 
     assert kg_store.node_label(bundle, "smartphone") == "AcmeSpecificCategory"
 

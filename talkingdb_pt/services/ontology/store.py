@@ -206,14 +206,10 @@ def upsert_node_properties(
     if unknown:
         raise ValueError(f"unknown node properties: {sorted(unknown)}")
 
-    if "shorthands" in properties and not isinstance(
-        properties["shorthands"], str
-    ):
+    if "shorthands" in properties and not isinstance(properties["shorthands"], str):
         properties["shorthands"] = json.dumps(properties["shorthands"])
 
-    if "extra_json" in properties and not isinstance(
-        properties["extra_json"], str
-    ):
+    if "extra_json" in properties and not isinstance(properties["extra_json"], str):
         properties["extra_json"] = json.dumps(properties["extra_json"])
 
     existing = get_node_properties(conn, namespace, node_id, fallback=False) or {}
@@ -222,9 +218,7 @@ def upsert_node_properties(
     columns = ["namespace", "node_id", *_PROPERTY_COLUMNS]
     values = [namespace, node_id, *(merged.get(col) for col in _PROPERTY_COLUMNS)]
     placeholders = ", ".join("?" for _ in columns)
-    update_clause = ", ".join(
-        f"{col} = excluded.{col}" for col in _PROPERTY_COLUMNS
-    )
+    update_clause = ", ".join(f"{col} = excluded.{col}" for col in _PROPERTY_COLUMNS)
 
     conn.execute(
         f"""
@@ -254,7 +248,8 @@ def get_node_properties(
 
     for ns in namespaces:
         row = conn.execute(
-            "SELECT * FROM ontology_node_properties WHERE namespace = ? AND node_id = ?",
+            "SELECT * FROM ontology_node_properties "
+            "WHERE namespace = ? AND node_id = ?",
             (ns, node_id),
         ).fetchone()
 

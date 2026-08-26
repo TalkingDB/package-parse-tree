@@ -11,7 +11,6 @@ from talkingdb_pt.services.kg.store import (
 from talkingdb_pt.services.ner.client import (
     NELEntityNotFound,
     add_entity_surface_text,
-    get_entity,
     update_entity_surface_texts,
     upsert_entity,
 )
@@ -45,7 +44,9 @@ async def train_all_entities(bundle: OntologyBundle) -> dict:
         aliases = sorted({*attrs.get("surface_texts", []), *shorthands, node_id})
 
         try:
-            await upsert_entity(bundle.namespace, node_id, attrs.get("label", ""), aliases)
+            await upsert_entity(
+                bundle.namespace, node_id, attrs.get("label", ""), aliases
+            )
             trained += 1
         except Exception:  # noqa: BLE001 - one bad entity must not abort the whole sync
             skipped += 1
@@ -73,7 +74,9 @@ async def add_synonyms(bundle: OntologyBundle, src_id: str, aliases: list[str]) 
     return {"src_id": src_id, "alternate_names": merged}
 
 
-async def remove_synonyms(bundle: OntologyBundle, src_id: str, aliases: list[str]) -> dict:
+async def remove_synonyms(
+    bundle: OntologyBundle, src_id: str, aliases: list[str]
+) -> dict:
     current = _current_surface_texts(bundle, src_id)
     to_remove = {a.lower() for a in aliases}
     updated = sorted({a.lower() for a in current if a.lower() not in to_remove})
@@ -90,7 +93,9 @@ async def remove_synonyms(bundle: OntologyBundle, src_id: str, aliases: list[str
 
 
 async def add_synonyms_batch(bundle: OntologyBundle, items: list[dict]) -> list[dict]:
-    return [await add_synonyms(bundle, item["src_id"], item["aliases"]) for item in items]
+    return [
+        await add_synonyms(bundle, item["src_id"], item["aliases"]) for item in items
+    ]
 
 
 def export_synonyms_csv(bundle: OntologyBundle) -> str:

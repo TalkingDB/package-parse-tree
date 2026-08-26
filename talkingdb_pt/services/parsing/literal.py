@@ -96,22 +96,42 @@ def handle_numerical_surface_texts(maps: LiteralMaps, num_st: str) -> dict:
 
 def extract_literal_entities(bundle: OntologyBundle, ctx: LiteralContext) -> None:
     ctx.exact_lit = [
-        {"entity_id": key, "surface_text": v["surface_text"], "loc": v["location"], "metadata": {"entity_id": v["entity_id"]}}
+        {
+            "entity_id": key,
+            "surface_text": v["surface_text"],
+            "loc": v["location"],
+            "metadata": {"entity_id": v["entity_id"]},
+        }
         for key, v in ctx.ner_output.items()
         if _has_default_unit(bundle, v["entity_id"])
     ]
     ctx.units = [
-        {"entity_id": key, "surface_text": v["surface_text"], "loc": v["location"], "metadata": {"entity_id": v["entity_id"]}}
+        {
+            "entity_id": key,
+            "surface_text": v["surface_text"],
+            "loc": v["location"],
+            "metadata": {"entity_id": v["entity_id"]},
+        }
         for key, v in ctx.ner_output.items()
         if "unit" in _parents(bundle, v["entity_id"])
     ]
     ctx.comparators = [
-        {"entity_id": key, "surface_text": v["surface_text"], "loc": v["location"], "metadata": {"entity_id": v["entity_id"]}}
+        {
+            "entity_id": key,
+            "surface_text": v["surface_text"],
+            "loc": v["location"],
+            "metadata": {"entity_id": v["entity_id"]},
+        }
         for key, v in ctx.ner_output.items()
         if "comparator" in _parents(bundle, v["entity_id"])
     ]
     ctx.num_comps = [
-        {"entity_id": key, "surface_text": v["surface_text"], "loc": v["location"], "metadata": {}}
+        {
+            "entity_id": key,
+            "surface_text": v["surface_text"],
+            "loc": v["location"],
+            "metadata": {},
+        }
         for key, v in ctx.ner_output.items()
         if NUMBER_PATTERN_MARKER in key
     ]
@@ -180,7 +200,10 @@ def associate_comps_to_nums(bundle: OntologyBundle, ctx: LiteralContext) -> None
 
         def stop(det):
             if NUMBER_PATTERN_MARKER in det["key"]:
-                return {"surface_text": det["surface_text"], "entity_id": det["entity_id"]}
+                return {
+                    "surface_text": det["surface_text"],
+                    "entity_id": det["entity_id"],
+                }
             return None  # comparators keep sliding past non-number entities
 
         match = _scan_direction(ctx, anchor, 1, stop, skip_number_patterns=False)
@@ -213,16 +236,21 @@ def deduce_literal_from_num(bundle: OntologyBundle, ctx: LiteralContext) -> None
             if value_type == "dimensions":
                 num["metadata"]["literal"]["kg"] = ctx.maps.ele_dim_map.get(element, {})
             elif element:
-                num["metadata"]["literal"]["kg"] = ctx.maps.ele_lit_map.get(element, {}).get("literals", {})
+                num["metadata"]["literal"]["kg"] = ctx.maps.ele_lit_map.get(
+                    element, {}
+                ).get("literals", {})
         else:
             value = values["value"]
             if value_type == "dimensions":
-                num["metadata"]["literal"]["kg"] = ctx.maps.ele_dim_map.get(LENGTH_ELEMENT_FALLBACK, {})
+                num["metadata"]["literal"]["kg"] = ctx.maps.ele_dim_map.get(
+                    LENGTH_ELEMENT_FALLBACK, {}
+                )
             elif value_type in ("int", "float") and value is not None:
                 in_range = {
                     lit_id: info
                     for lit_id, info in ctx.maps.lit_range_map.items()
-                    if len(info["range"]) >= 2 and info["range"][0] <= value <= info["range"][1]
+                    if len(info["range"]) >= 2
+                    and info["range"][0] <= value <= info["range"][1]
                 }
                 if in_range:
                     num["metadata"]["literal"]["kg"] = in_range
@@ -231,7 +259,9 @@ def deduce_literal_from_num(bundle: OntologyBundle, ctx: LiteralContext) -> None
 def deduce_literal_from_unit(ctx: LiteralContext) -> None:
     for unit in ctx.units:
         unit["metadata"]["literal"] = {"kg": {}, "exact_lit": {}}
-        elements = ctx.maps.unit_ele_map.get(unit["metadata"]["entity_id"], {}).get("elements", [])
+        elements = ctx.maps.unit_ele_map.get(unit["metadata"]["entity_id"], {}).get(
+            "elements", []
+        )
 
         merged = {}
         for element in elements:
@@ -301,7 +331,10 @@ def associate_literals_to_units(bundle: OntologyBundle, ctx: LiteralContext) -> 
         def stop(det, unit=unit):
             if _has_default_unit(bundle, det["entity_id"]):
                 if det["entity_id"] in unit["metadata"]["literal"]["kg"]:
-                    return {"surface_text": det["surface_text"], "entity_id": det["entity_id"]}
+                    return {
+                        "surface_text": det["surface_text"],
+                        "entity_id": det["entity_id"],
+                    }
                 return False
             return None
 
@@ -322,7 +355,9 @@ def add_literals_to_aft(bundle: OntologyBundle, ner_output: dict) -> list[dict]:
     ctx = LiteralContext(ner_output=ner_output, maps=maps)
 
     ctx.ner_indices = sorted(tuple(v["location"]) for v in ner_output.values())
-    ctx.ner_indices_map = {tuple(v["location"]): {"key": k, **v} for k, v in ner_output.items()}
+    ctx.ner_indices_map = {
+        tuple(v["location"]): {"key": k, **v} for k, v in ner_output.items()
+    }
 
     extract_literal_entities(bundle, ctx)  # also associates comparators to nums
     associate_literals_to_units(bundle, ctx)

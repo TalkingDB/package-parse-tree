@@ -28,6 +28,8 @@ def test_filter_attributes_works_with_plain_dicts_too(bundle):
     upsert_node(bundle, "color", label="AttributeClass")
     upsert_edge(bundle, "smartphone", "has_attributes", "color")
 
-    result = filter_attributes(bundle, "smartphone", [{"name": "color"}, {"name": "weight"}])
+    result = filter_attributes(
+        bundle, "smartphone", [{"name": "color"}, {"name": "weight"}]
+    )
 
     assert result == [{"name": "color"}]

@@ -15,7 +15,9 @@ class NELEntityNotFound(Exception):
 
 async def get_entity(namespace: str, entity_id: str) -> dict | None:
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{NEL_SERVER}/api/namespaces/{namespace}/entities/{entity_id}")
+        response = await client.get(
+            f"{NEL_SERVER}/api/namespaces/{namespace}/entities/{entity_id}"
+        )
         if response.status_code == 404:
             return None
         response.raise_for_status()
@@ -28,7 +30,11 @@ async def create_entity(
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{NEL_SERVER}/api/namespaces/{namespace}/entities",
-            json={"entity_id": entity_id, "label": label, "surface_texts": surface_texts},
+            json={
+                "entity_id": entity_id,
+                "label": label,
+                "surface_texts": surface_texts,
+            },
         )
         if response.status_code == 409:
             raise NELEntityConflict(entity_id)
@@ -50,7 +56,9 @@ async def update_entity_surface_texts(
         return response.json()
 
 
-async def add_entity_surface_text(namespace: str, entity_id: str, surface_text: str) -> dict | None:
+async def add_entity_surface_text(
+    namespace: str, entity_id: str, surface_text: str
+) -> dict | None:
     """Returns None (no-op) if the surface text is already registered -
     NEL has no dedicated "remove one surface text" endpoint, only this
     additive one plus a full-replace PATCH, so callers that need removal

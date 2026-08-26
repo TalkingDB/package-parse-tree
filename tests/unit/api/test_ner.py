@@ -19,7 +19,8 @@ def test_train_ner(namespace):
     registry.get(namespace)  # ensure the bundle exists (empty ontology is fine)
 
     with patch(
-        "talkingdb_pt.services.ner.trainer.upsert_entity", new=AsyncMock(return_value={})
+        "talkingdb_pt.services.ner.trainer.upsert_entity",
+        new=AsyncMock(return_value={}),
     ):
         response = client.post(f"/api/namespaces/{namespace}/ner/train")
 
@@ -32,7 +33,9 @@ def test_create_synonyms(namespace):
     bundle = registry.get(namespace)
     upsert_node(bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15"])
 
-    with patch("talkingdb_pt.services.ner.trainer.add_entity_surface_text", new=AsyncMock()):
+    with patch(
+        "talkingdb_pt.services.ner.trainer.add_entity_surface_text", new=AsyncMock()
+    ):
         response = client.post(
             f"/api/namespaces/{namespace}/ner/synonyms",
             json={"src_id": "iphone-15", "aliases": ["iPhone15"]},
@@ -55,9 +58,13 @@ def test_create_synonyms_unknown_entity_returns_404(namespace):
 
 def test_delete_synonyms(namespace):
     bundle = registry.get(namespace)
-    upsert_node(bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15", "iPhone15"])
+    upsert_node(
+        bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15", "iPhone15"]
+    )
 
-    with patch("talkingdb_pt.services.ner.trainer.update_entity_surface_texts", new=AsyncMock()):
+    with patch(
+        "talkingdb_pt.services.ner.trainer.update_entity_surface_texts", new=AsyncMock()
+    ):
         response = client.request(
             "DELETE",
             f"/api/namespaces/{namespace}/ner/synonyms",
@@ -84,7 +91,9 @@ def test_create_synonyms_many(namespace):
     upsert_node(bundle, "a", label="Instance")
     upsert_node(bundle, "b", label="Instance")
 
-    with patch("talkingdb_pt.services.ner.trainer.add_entity_surface_text", new=AsyncMock()):
+    with patch(
+        "talkingdb_pt.services.ner.trainer.add_entity_surface_text", new=AsyncMock()
+    ):
         response = client.post(
             f"/api/namespaces/{namespace}/ner/synonyms/many",
             json=[

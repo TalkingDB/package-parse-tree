@@ -17,16 +17,19 @@ LENGTH_ELEMENT = "length"
 
 @dataclass
 class LiteralMaps:
-    # element_name -> {"literals": {lit_id: {"pt_prec": num, "default_unit": unit_id|None}}}
+    # element_name -> {"literals": {lit_id: {"pt_prec": num,
+    # "default_unit": unit_id|None}}}
     ele_lit_map: dict = field(default_factory=dict)
-    # unit_id -> {"elements": [element names this unit is used by], "aliases": [unit_id, *surface_texts]}
+    # unit_id -> {"elements": [elements this unit is used by],
+    # "aliases": [unit_id, *surface_texts]}
     unit_ele_map: dict = field(default_factory=dict)
     # element_name -> {lit_id: {...}} - the dimensions element's literals, re-keyed by
     # the element each literal's default unit actually belongs to
     ele_dim_map: dict = field(default_factory=dict)
     # lit_id -> {"range": (min, max), "pt_prec": num}
     lit_range_map: dict = field(default_factory=dict)
-    # shorthand (lowercased) -> {"value": shorthand, "multiplier": num|None, "symbol_for": node_id}
+    # shorthand (lowercased) -> {"value": shorthand, "multiplier": num|None,
+    # "symbol_for": node_id}
     symbol_map: dict = field(default_factory=dict)
     # conjunction words used to split compound dimensional values ("2x2", "2 by 3")
     dim_conj: list = field(default_factory=list)
@@ -111,9 +114,7 @@ def _build_lit_range_map(bundle: OntologyBundle) -> dict:
     for lit_id in literal_ids:
         range_min = node_property(bundle, lit_id, "range_min")
         range_max = node_property(bundle, lit_id, "range_max")
-        bounds = sorted(
-            v for v in (range_min, range_max) if v is not None
-        ) or [-1, -1]
+        bounds = sorted(v for v in (range_min, range_max) if v is not None) or [-1, -1]
 
         lit_range_map[lit_id] = {
             "range": tuple(bounds),

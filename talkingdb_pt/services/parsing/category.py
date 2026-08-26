@@ -40,7 +40,11 @@ def extract_ctg_entities(bundle: OntologyBundle, ner_output: dict) -> tuple[list
             continue
 
         parents = find_ancestors(
-            bundle, entity_id, "instance_of", max_hops=1, fields_by_hop={1: ["contains"]}
+            bundle,
+            entity_id,
+            "instance_of",
+            max_hops=1,
+            fields_by_hop={1: ["contains"]},
         ).get(1, [])
 
         if any(p.get("contains") == "instances" for p in parents):
@@ -56,7 +60,11 @@ def deduce_category_from_ins(bundle: OntologyBundle, ctg_instances: list) -> Non
     for instance in ctg_instances:
         entity_id = instance["metadata"]["entity_id"]
         parents = find_ancestors(
-            bundle, entity_id, "instance_of", max_hops=1, fields_by_hop={1: ["contains"]}
+            bundle,
+            entity_id,
+            "instance_of",
+            max_hops=1,
+            fields_by_hop={1: ["contains"]},
         ).get(1, [])
 
         instance["metadata"]["categories"] = {
@@ -98,7 +106,10 @@ def associate_category_to_ins(
                 candidate_entity_id = indices_map[candidate_loc]["entity_id"]
 
                 if _is_resolvable(bundle, candidate_entity_id):
-                    if node_property(bundle, candidate_entity_id, "contains") == "instances":
+                    if (
+                        node_property(bundle, candidate_entity_id, "contains")
+                        == "instances"
+                    ):
                         if candidate_entity_id in valid_categories:
                             candidates[candidate_loc] = {
                                 **by_loc[candidate_loc],

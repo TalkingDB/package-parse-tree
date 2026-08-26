@@ -9,7 +9,13 @@ from talkingdb_pt.services.kg.store import (
 # scalar ontology_node_properties field. Kept as an explicit allowlist
 # (rather than "anything registered as an edge") to keep filter behavior
 # predictable as more predicates get registered.
-_EDGE_FIELDS = {"instance_of", "subclass_of", "has_attributes", "has_units", "default_unit"}
+_EDGE_FIELDS = {
+    "instance_of",
+    "subclass_of",
+    "has_attributes",
+    "has_units",
+    "default_unit",
+}
 
 _COMPARATORS = {
     "eq": lambda a, b: a == b,
@@ -92,7 +98,9 @@ def run_filter_query(
     candidates = _base_instance_ids(bundle)
     for clause in filters or []:
         candidates = {
-            node_id for node_id in candidates if _matches_clause(bundle, node_id, clause)
+            node_id
+            for node_id in candidates
+            if _matches_clause(bundle, node_id, clause)
         }
 
     results = [_project(bundle, node_id, fields) for node_id in candidates]
@@ -100,12 +108,16 @@ def run_filter_query(
     for sorter in reversed(sorters or []):
         field = sorter["field"]
         reverse = sorter.get("direction", "asc") == "desc"
-        results.sort(key=lambda r: (r.get(field) is None, r.get(field)), reverse=reverse)
+        results.sort(
+            key=lambda r: (r.get(field) is None, r.get(field)), reverse=reverse
+        )
 
     return results[offset : offset + limit]
 
 
-def run_multiple_filter_queries(bundle: OntologyBundle, queries: list[dict]) -> list[dict]:
+def run_multiple_filter_queries(
+    bundle: OntologyBundle, queries: list[dict]
+) -> list[dict]:
     return [
         {"filter": query, "results": run_filter_query(bundle, **query)}
         for query in queries

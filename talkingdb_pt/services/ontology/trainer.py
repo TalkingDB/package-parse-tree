@@ -1,5 +1,5 @@
-from talkingdb_pt.services.kg.store import OntologyBundle, save as save_bundle
-from talkingdb_pt.services.kg.store import upsert_edge, upsert_node
+from talkingdb_pt.services.kg.store import OntologyBundle, upsert_edge, upsert_node
+from talkingdb_pt.services.kg.store import save as save_bundle
 from talkingdb_pt.services.ontology import naming
 from talkingdb_pt.services.ontology.store import (
     find_ontology_type,
@@ -30,7 +30,13 @@ _KNOWN_SCALAR_FIELDS = {
     "is_a",
 }
 
-_RESERVED_KEYS = {"src_id", "alternate_names", "class_type", "instance_type", "type_name"}
+_RESERVED_KEYS = {
+    "src_id",
+    "alternate_names",
+    "class_type",
+    "instance_type",
+    "type_name",
+}
 
 
 class OntologyTrainerError(Exception):
@@ -58,9 +64,7 @@ def add_type_to_ontology(
     )
 
     resolved_triples = []
-    for predicate, target_type in (
-        (rt[0], rt[1]) for rt in relationship_triples
-    ):
+    for predicate, target_type in ((rt[0], rt[1]) for rt in relationship_triples):
         target_kg_type_name = (
             naming.class_type_name(target_type)
             if predicate in ("instance_of", "subclass_of")

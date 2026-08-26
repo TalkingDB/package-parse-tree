@@ -30,7 +30,13 @@ def test_build_ner_ids_from_universal_entities():
                 "surface_text": "apple",
                 "corrected_text": "apple",
                 "score": 0,
-                "entities": [{"entity_id": "fruit-apple", "label": "Fruit", "surface_text": "apple"}],
+                "entities": [
+                    {
+                        "entity_id": "fruit-apple",
+                        "label": "Fruit",
+                        "surface_text": "apple",
+                    }
+                ],
             }
         ],
         "regex_entities": [],
@@ -57,8 +63,16 @@ def test_build_ner_ids_fans_out_multiple_entities_per_span():
                 "corrected_text": "apple",
                 "score": 0,
                 "entities": [
-                    {"entity_id": "fruit-apple", "label": "Fruit", "surface_text": "apple"},
-                    {"entity_id": "company-apple", "label": "Company", "surface_text": "apple"},
+                    {
+                        "entity_id": "fruit-apple",
+                        "label": "Fruit",
+                        "surface_text": "apple",
+                    },
+                    {
+                        "entity_id": "company-apple",
+                        "label": "Company",
+                        "surface_text": "apple",
+                    },
                 ],
             }
         ],
@@ -75,7 +89,13 @@ def test_build_ner_ids_includes_non_overlapping_regex():
     response = {
         "universal_entities": [],
         "regex_entities": [
-            {"index": [0, 2], "surface_text": "99", "rule": "number-rule", "regex": r"\d+", "meronyms": []}
+            {
+                "index": [0, 2],
+                "surface_text": "99",
+                "rule": "number-rule",
+                "regex": r"\d+",
+                "meronyms": [],
+            }
         ],
         "no_tag_entities": [],
     }
@@ -99,11 +119,23 @@ def test_build_ner_ids_excludes_overlapping_regex():
                 "surface_text": "apple",
                 "corrected_text": "apple",
                 "score": 0,
-                "entities": [{"entity_id": "fruit-apple", "label": "Fruit", "surface_text": "apple"}],
+                "entities": [
+                    {
+                        "entity_id": "fruit-apple",
+                        "label": "Fruit",
+                        "surface_text": "apple",
+                    }
+                ],
             }
         ],
         "regex_entities": [
-            {"index": [1, 3], "surface_text": "pp", "rule": "some-rule", "regex": ".", "meronyms": []}
+            {
+                "index": [1, 3],
+                "surface_text": "pp",
+                "rule": "some-rule",
+                "regex": ".",
+                "meronyms": [],
+            }
         ],
         "no_tag_entities": [],
     }

@@ -10,13 +10,18 @@ from talkingdb_pt.model.nl import (
 from talkingdb_pt.services.kg.store import OntologyBundle
 from talkingdb_pt.services.ner.client import build_ner_ids, extract_and_link
 from talkingdb_pt.services.parsing.attrs_unifier import filter_attributes
-from talkingdb_pt.services.parsing.category import add_classes_to_ctg, category_query_similarity
+from talkingdb_pt.services.parsing.category import (
+    add_classes_to_ctg,
+    category_query_similarity,
+)
 from talkingdb_pt.services.parsing.literal import add_literals_to_aft
 from talkingdb_pt.services.parsing.object_attrs import add_object_attrs_to_aft
 from talkingdb_pt.services.parsing.stopwords import filter_stop_words
 
 
-def assign_attrs(attrs_filter_table: list[dict], target_attributes: list[NLAttribute]) -> None:
+def assign_attrs(
+    attrs_filter_table: list[dict], target_attributes: list[NLAttribute]
+) -> None:
     """Fold attribute-filter-table rows into an instance's or category's
     `attributes` list, grouping multiple values under one NLAttribute per
     distinct attr_name (mutates target_attributes in place)."""
@@ -109,19 +114,25 @@ async def parse_input(bundle: OntologyBundle, text: str) -> dict:
                 groups[row["category"]] = category
 
             assign_attrs(attrs_filter_table, category.attributes)
-            category.attributes = filter_attributes(bundle, row["category_id"], category.attributes)
+            category.attributes = filter_attributes(
+                bundle, row["category_id"], category.attributes
+            )
             category.score = category_query_similarity(
                 category.name, text, len(category.name), len(text)
             )
 
-        extract_groups.groups = sorted(groups.values(), key=lambda c: c.score, reverse=True)
+        extract_groups.groups = sorted(
+            groups.values(), key=lambda c: c.score, reverse=True
+        )
     else:
         misc_category = NLCategory()
         assign_attrs(attrs_filter_table, misc_category.attributes)
         if misc_category.attributes:
             extract_groups.groups.append(misc_category)
 
-    no_tag_surface_texts = filter_stop_words([e["surface_text"] for e in no_tag_entities])
+    no_tag_surface_texts = filter_stop_words(
+        [e["surface_text"] for e in no_tag_entities]
+    )
     search_weight = len(nel_response.get("universal_entities", []))
 
     return {

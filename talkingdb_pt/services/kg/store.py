@@ -285,4 +285,6 @@ def nodes_with_scalar_set(bundle: OntologyBundle, field: str) -> list[str]:
     property - replaces KGHandler.get_nodes_having_predicate() for scalar
     (non-edge) predicates."""
 
-    return ontology_store.list_nodes_with_property(bundle.entity_conn, bundle.namespace, field)
+    return ontology_store.list_nodes_with_property(
+        bundle.entity_conn, bundle.namespace, field
+    )

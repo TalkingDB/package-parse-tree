@@ -17,7 +17,13 @@ def namespace():
 def seed_products(namespace):
     bundle = registry.get(namespace)
     upsert_node(bundle, "smartphone", label="Category")
-    upsert_node(bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15"], scalar_props={"src_name": "iPhone 15"})
+    upsert_node(
+        bundle,
+        "iphone-15",
+        label="Instance",
+        surface_texts=["iPhone 15"],
+        scalar_props={"src_name": "iPhone 15"},
+    )
     upsert_edge(bundle, "iphone-15", "instance_of", "smartphone")
     return bundle
 
@@ -49,7 +55,9 @@ def test_get_kg_data_multiple(namespace):
 
     response = client.post(
         f"/api/namespaces/{namespace}/kg/data/filters/multiple",
-        json={"queries": [{"filters": [{"field": "instance_of", "value": "smartphone"}]}]},
+        json={
+            "queries": [{"filters": [{"field": "instance_of", "value": "smartphone"}]}]
+        },
     )
 
     assert response.status_code == 200

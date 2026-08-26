@@ -1,5 +1,8 @@
 from talkingdb_pt.services.kg.store import upsert_edge, upsert_node
-from talkingdb_pt.services.parsing.literal import add_literals_to_aft, handle_numerical_surface_texts
+from talkingdb_pt.services.parsing.literal import (
+    add_literals_to_aft,
+    handle_numerical_surface_texts,
+)
 from talkingdb_pt.services.parsing.literal_maps import build_literal_maps
 
 
@@ -21,7 +24,12 @@ def build_storage_ontology(bundle):
     )
     upsert_edge(bundle, "storage_capacity", "instance_of", "storage")
     upsert_edge(bundle, "storage_capacity", "default_unit", "gb")
-    upsert_node(bundle, "gb", label="Instance", scalar_props={"shorthands": ["GB"], "multiplier": None})
+    upsert_node(
+        bundle,
+        "gb",
+        label="Instance",
+        scalar_props={"shorthands": ["GB"], "multiplier": None},
+    )
     upsert_edge(bundle, "storage", "has_units", "gb")
 
     upsert_node(bundle, "unit", label="Class")  # universal "unit" marker
@@ -73,16 +81,25 @@ def test_add_literals_to_aft_resolves_via_unit_symbol(bundle):
     # with an overlapping range but a different unit to force disambiguation.
     upsert_node(bundle, "weight", label="Class_Type_Literal_Attribute")
     upsert_node(
-        bundle, "item_weight", label="Instance_Type_Item_Weight",
+        bundle,
+        "item_weight",
+        label="Instance_Type_Item_Weight",
         scalar_props={"pt_prec": 1, "range_min": 0, "range_max": 10000},
     )
     upsert_edge(bundle, "item_weight", "instance_of", "weight")
     upsert_edge(bundle, "item_weight", "default_unit", "kg")
-    upsert_node(bundle, "kg", label="Instance", scalar_props={"shorthands": ["kg"], "multiplier": None})
+    upsert_node(
+        bundle,
+        "kg",
+        label="Instance",
+        scalar_props={"shorthands": ["kg"], "multiplier": None},
+    )
     upsert_edge(bundle, "weight", "has_units", "kg")
     upsert_edge(bundle, "kg", "instance_of", "unit")
 
-    ner_output = {"number_patterns&&0&&5": ner_entry("number_patterns", [0, 5], "128gb")}
+    ner_output = {
+        "number_patterns&&0&&5": ner_entry("number_patterns", [0, 5], "128gb")
+    }
 
     aft = add_literals_to_aft(bundle, ner_output)
 
@@ -109,10 +126,14 @@ def test_add_literals_to_aft_associates_comparator(bundle):
     assert aft[0]["comparator"]["surface_text"] == "above"
 
 
-def test_add_literals_to_aft_unresolvable_number_with_no_kg_match_produces_no_row(bundle):
+def test_add_literals_to_aft_unresolvable_number_with_no_kg_match_produces_no_row(
+    bundle,
+):
     # No ontology registered at all - the number can't be resolved to any
     # literal attribute, so no row should be produced despite parsing fine.
-    ner_output = {"number_patterns&&0&&3": ner_entry("number_patterns", [0, 3], "999999")}
+    ner_output = {
+        "number_patterns&&0&&3": ner_entry("number_patterns", [0, 3], "999999")
+    }
 
     aft = add_literals_to_aft(bundle, ner_output)
 

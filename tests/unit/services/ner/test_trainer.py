@@ -19,7 +19,8 @@ async def test_train_all_entities_counts_and_upserts(bundle):
     upsert_node(bundle, "smartphone", label="Category")
 
     with patch(
-        "talkingdb_pt.services.ner.trainer.upsert_entity", new=AsyncMock(return_value={})
+        "talkingdb_pt.services.ner.trainer.upsert_entity",
+        new=AsyncMock(return_value={}),
     ) as mocked:
         result = await train_all_entities(bundle)
 
@@ -69,7 +70,9 @@ async def test_add_synonyms_unknown_entity_raises(bundle):
 
 @pytest.mark.anyio
 async def test_remove_synonyms_removes_matching_aliases(bundle):
-    upsert_node(bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15", "iPhone15"])
+    upsert_node(
+        bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15", "iPhone15"]
+    )
 
     with patch(
         "talkingdb_pt.services.ner.trainer.update_entity_surface_texts", new=AsyncMock()
@@ -100,16 +103,21 @@ async def test_add_synonyms_batch_processes_each_item(bundle):
     upsert_node(bundle, "a", label="Instance")
     upsert_node(bundle, "b", label="Instance")
 
-    with patch("talkingdb_pt.services.ner.trainer.add_entity_surface_text", new=AsyncMock()):
+    with patch(
+        "talkingdb_pt.services.ner.trainer.add_entity_surface_text", new=AsyncMock()
+    ):
         results = await add_synonyms_batch(
-            bundle, [{"src_id": "a", "aliases": ["x"]}, {"src_id": "b", "aliases": ["y"]}]
+            bundle,
+            [{"src_id": "a", "aliases": ["x"]}, {"src_id": "b", "aliases": ["y"]}],
         )
 
     assert [r["src_id"] for r in results] == ["a", "b"]
 
 
 def test_export_synonyms_csv_lists_namespace_entities(bundle):
-    upsert_node(bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15", "iPhone15"])
+    upsert_node(
+        bundle, "iphone-15", label="Instance", surface_texts=["iPhone 15", "iPhone15"]
+    )
 
     csv_text = export_synonyms_csv(bundle)
 

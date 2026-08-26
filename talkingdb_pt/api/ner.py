@@ -25,11 +25,15 @@ class SynonymsRequest(BaseModel):
 
 
 def _not_found(exc: EntityNotInOntologyError) -> HTTPException:
-    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Entity '{exc}' not found")
+    return HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=f"Entity '{exc}' not found"
+    )
 
 
 @router.post("/train")
-async def train_ner(namespace: str, bundle: OntologyBundle = Depends(get_ontology_bundle)) -> dict:
+async def train_ner(
+    namespace: str, bundle: OntologyBundle = Depends(get_ontology_bundle)
+) -> dict:
     return await train_all_entities(bundle)
 
 
@@ -58,7 +62,9 @@ async def delete_synonyms(
 
 
 @router.get("/synonyms")
-async def get_synonyms(namespace: str, bundle: OntologyBundle = Depends(get_ontology_bundle)) -> StreamingResponse:
+async def get_synonyms(
+    namespace: str, bundle: OntologyBundle = Depends(get_ontology_bundle)
+) -> StreamingResponse:
     csv_text = export_synonyms_csv(bundle)
     return StreamingResponse(
         iter([csv_text]),

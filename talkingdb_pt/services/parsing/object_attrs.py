@@ -8,7 +8,9 @@ from talkingdb_pt.services.parsing.category import _is_resolvable
 from talkingdb_pt.services.parsing.utils import attr_sort_order
 
 
-def extract_obj_attr_entities(bundle: OntologyBundle, ner_output: dict) -> tuple[list, list]:
+def extract_obj_attr_entities(
+    bundle: OntologyBundle, ner_output: dict
+) -> tuple[list, list]:
     """Split NER matches into attribute-class mentions (e.g. "color") and
     attribute-value mentions (e.g. "red"), based on the `contains` scalar
     property - mirrors category.extract_ctg_entities but for "attributes"
@@ -34,7 +36,11 @@ def extract_obj_attr_entities(bundle: OntologyBundle, ner_output: dict) -> tuple
             continue
 
         parents = find_ancestors(
-            bundle, entity_id, "instance_of", max_hops=1, fields_by_hop={1: ["contains"]}
+            bundle,
+            entity_id,
+            "instance_of",
+            max_hops=1,
+            fields_by_hop={1: ["contains"]},
         ).get(1, [])
 
         if any(p.get("contains") == "attributes" for p in parents):
@@ -43,7 +49,9 @@ def extract_obj_attr_entities(bundle: OntologyBundle, ner_output: dict) -> tuple
     return attr_classes, attr_values
 
 
-def deduce_attr_class_from_attr_value(bundle: OntologyBundle, attr_values: list) -> None:
+def deduce_attr_class_from_attr_value(
+    bundle: OntologyBundle, attr_values: list
+) -> None:
     """For each attribute-value mention, record the attribute-class ids it
     directly belongs to (its instance_of parents that themselves contain
     attributes)."""
@@ -51,7 +59,11 @@ def deduce_attr_class_from_attr_value(bundle: OntologyBundle, attr_values: list)
     for value in attr_values:
         entity_id = value["metadata"]["entity_id"]
         parents = find_ancestors(
-            bundle, entity_id, "instance_of", max_hops=1, fields_by_hop={1: ["contains"]}
+            bundle,
+            entity_id,
+            "instance_of",
+            max_hops=1,
+            fields_by_hop={1: ["contains"]},
         ).get(1, [])
 
         value["metadata"]["attr_classes"] = {
@@ -98,7 +110,9 @@ def add_object_attrs_to_aft(bundle: OntologyBundle, ner_output: dict) -> list[di
                     "attr_value_kg_id": meta["entity_id"],
                     "attr_value_surface_text": value["surface_text"],
                     "attr_value_loc": value["loc"],
-                    "attr_name_kg_id": source_of_edge(bundle, "has_attributes", attr_name),
+                    "attr_name_kg_id": source_of_edge(
+                        bundle, "has_attributes", attr_name
+                    ),
                 }
             )
 

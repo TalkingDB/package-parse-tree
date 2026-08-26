@@ -22,9 +22,7 @@ def test_upsert_and_get_ontology_type(memory_conn):
     assert result["is_class"] is True
     assert result["is_instance"] is False
     assert result["extra_attrs"] == {"note": "top-level grouping"}
-    assert result["relationship_triples"] == [
-        ["category", "subclass_of", "category"]
-    ]
+    assert result["relationship_triples"] == [["category", "subclass_of", "category"]]
 
 
 def test_upsert_ontology_type_overwrites_on_conflict(memory_conn):
@@ -158,9 +156,10 @@ def test_list_ontology_types_includes_universal_and_namespace(memory_conn):
         is_instance=False,
     )
 
-    listed = {t["kg_type_name"] for t in ontology_store.list_ontology_types(
-        memory_conn, "acme"
-    )}
+    listed = {
+        t["kg_type_name"]
+        for t in ontology_store.list_ontology_types(memory_conn, "acme")
+    }
 
     assert listed == {"U", "T"}
 
@@ -188,7 +187,9 @@ def test_upsert_node_properties_merges_partial_updates(memory_conn):
     ontology_store.upsert_node_properties(
         memory_conn, "acme", "node-1", src_name="Storage Capacity"
     )
-    ontology_store.upsert_node_properties(memory_conn, "acme", "node-1", multiplier=1000.0)
+    ontology_store.upsert_node_properties(
+        memory_conn, "acme", "node-1", multiplier=1000.0
+    )
 
     props = ontology_store.get_node_properties(memory_conn, "acme", "node-1")
 

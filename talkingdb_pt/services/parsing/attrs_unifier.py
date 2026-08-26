@@ -1,7 +1,9 @@
 from talkingdb_pt.services.kg.store import OntologyBundle, nodes_with_edge
 
 
-def filter_attributes(bundle: OntologyBundle, category_id: str, attributes: list) -> list:
+def filter_attributes(
+    bundle: OntologyBundle, category_id: str, attributes: list
+) -> list:
     """Keep only the attributes that are actually registered on this
     category via a has_attributes edge - filters out attributes the NL
     parser extracted that don't belong to the resolved category.

@@ -11,16 +11,13 @@ def test_instance_type_name():
 
 def test_create_kg_friendly_entity_name_handles_separators():
     assert (
-        naming.create_kg_friendly_entity_name("storage capacity")
-        == "Storage_Capacity"
+        naming.create_kg_friendly_entity_name("storage capacity") == "Storage_Capacity"
     )
     assert (
-        naming.create_kg_friendly_entity_name("storage_capacity")
-        == "Storage_Capacity"
+        naming.create_kg_friendly_entity_name("storage_capacity") == "Storage_Capacity"
     )
     assert (
-        naming.create_kg_friendly_entity_name("storage-capacity")
-        == "Storage_Capacity"
+        naming.create_kg_friendly_entity_name("storage-capacity") == "Storage_Capacity"
     )
 
 

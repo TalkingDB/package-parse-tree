@@ -1,5 +1,8 @@
 from talkingdb_pt.services.kg.store import save, upsert_edge, upsert_node
-from talkingdb_pt.services.parsing.literal_maps import build_literal_maps, get_literal_maps
+from talkingdb_pt.services.parsing.literal_maps import (
+    build_literal_maps,
+    get_literal_maps,
+)
 
 
 def build_storage_ontology(bundle):
@@ -12,7 +15,13 @@ def build_storage_ontology(bundle):
     )
     upsert_edge(bundle, "storage_capacity", "instance_of", "storage")
     upsert_edge(bundle, "storage_capacity", "default_unit", "gb")
-    upsert_node(bundle, "gb", label="Instance", surface_texts=["gigabyte"], scalar_props={"shorthands": ["GB", "gb"], "multiplier": None})
+    upsert_node(
+        bundle,
+        "gb",
+        label="Instance",
+        surface_texts=["gigabyte"],
+        scalar_props={"shorthands": ["GB", "gb"], "multiplier": None},
+    )
     upsert_edge(bundle, "storage", "has_units", "gb")
 
 
@@ -61,7 +70,9 @@ def test_dim_conj_empty_when_no_conjunction_registered(bundle):
 
 
 def test_dim_conj_picks_up_registered_conjunction(bundle):
-    upsert_node(bundle, "x", label="Instance_Type_Dimension_Conjunction", surface_texts=["by"])
+    upsert_node(
+        bundle, "x", label="Instance_Type_Dimension_Conjunction", surface_texts=["by"]
+    )
 
     maps = build_literal_maps(bundle)
 

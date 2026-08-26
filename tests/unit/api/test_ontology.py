@@ -54,7 +54,11 @@ def test_write_and_count_ontology_data(namespace):
     write_response = client.post(
         f"/api/namespaces/{namespace}/ontology/data",
         json=[
-            {"src_id": "electronics", "class_type": "category", "src_name": "Electronics"},
+            {
+                "src_id": "electronics",
+                "class_type": "category",
+                "src_name": "Electronics",
+            },
             {"src_id": "smartphones", "class_type": "category"},
         ],
     )

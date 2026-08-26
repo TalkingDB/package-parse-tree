@@ -99,9 +99,7 @@ def test_add_node_to_kg_creates_builtin_instance_of_edge(bundle):
 
 def test_add_node_to_kg_creates_extra_attrs_ref_edge(bundle):
     register_category_type(bundle.entity_conn, bundle.namespace)
-    trainer.add_node_to_kg(
-        bundle, {"src_id": "electronics", "class_type": "category"}
-    )
+    trainer.add_node_to_kg(bundle, {"src_id": "electronics", "class_type": "category"})
     trainer.add_node_to_kg(
         bundle,
         {"src_id": "color-attr", "class_type": "category", "src_name": "Color"},
