@@ -40,7 +40,7 @@ Any other relationship is declared per type in `extra_attrs` with `value_type` `
 
 <sub>Diagram source: [synonym-path-from-ontology-node-to-a-matched-query.mmd](diagrams/synonym-path-from-ontology-node-to-a-matched-query.mmd). Edit it and re-render with the steps in [docs/diagrams](diagrams/README.md).</sub>
 
-In words: the names you give a node become NEL [surface texts](https://github.com/TalkingDB/ConceptDigger/blob/main/docs/concepts.md#surface-texts-every-name-for-a-thing) when you call `/ner/train`, which is what lets NEL point query words back at that node. Code: [`ontology/trainer.py`](../talkingdb_pt/services/ontology/trainer.py) and [`ner/trainer.py`](../talkingdb_pt/services/ner/trainer.py).
+In words: the names you give a node become NEL [surface texts](https://github.com/TalkingDB/ConceptDigger/blob/master/docs/concepts.md#surface-texts-every-name-for-a-thing) when you call `/ner/train`, which is what lets NEL point query words back at that node. Code: [`ontology/trainer.py`](../talkingdb_pt/services/ontology/trainer.py) and [`ner/trainer.py`](../talkingdb_pt/services/ner/trainer.py).
 
 > [!IMPORTANT]
 > Writing nodes to `/ontology/data` does not train NEL by itself. Call `POST /api/namespaces/{ns}/ner/train` afterwards, or queries will not find the new names.

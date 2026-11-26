@@ -1,4 +1,4 @@
-flowchart LR
+flowchart TB
     accTitle: Where package-parse-tree fits
     accDescr: A module such as module-ecommerce-ai sends a query to parse-tree through PTClient. Parse-tree asks the Named Entity Linker which known things are in the text, resolves them against its ontology store in SQLite, and returns a category, instance and attribute tree.
     MOD["module-ecommerce-ai<br>(or any caller)"] -- "PTClient" --> PT["package-parse-tree<br>:8093"]:::here

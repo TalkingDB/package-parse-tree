@@ -5,6 +5,11 @@ An ontology driven natural language query parser. Given an ontology of types, in
 ![Python 3.12 or 3.13](https://img.shields.io/badge/python-3.12%20%7C%203.13-3776AB)
 ![Port 8093](https://img.shields.io/badge/port-8093-555)
 
+<p align="center">
+  <img src="docs/images/demo.gif" alt="A short animated tour of package-parse-tree: what it is, how to start, and which page to read next">
+</p>
+<p align="center"><sub>A short tour: what it is, how to start, and what to read next.</sub></p>
+
 | Start here | Go deeper |
 | :--- | :--- |
 | [Key terms](#key-terms) | [Architecture: from query to tree](docs/architecture.md) |
@@ -25,7 +30,7 @@ This package is domain agnostic TalkingDB infrastructure: it has no built in con
 | **Instance** | One specific thing in a class | Hex nut M8 |
 | **Attribute** | A property used to filter | material, size |
 | **Unit** and **comparator** | How a number is measured and compared | `20` `mm`, "under" |
-| **[Surface text](https://github.com/TalkingDB/ConceptDigger/blob/main/docs/concepts.md#surface-texts-every-name-for-a-thing)** | A way people write a name; trained into NEL so the query can be matched | "hexagon nut" |
+| **[Surface text](https://github.com/TalkingDB/ConceptDigger/blob/master/docs/concepts.md#surface-texts-every-name-for-a-thing)** | A way people write a name; trained into NEL so the query can be matched | "hexagon nut" |
 
 ## Where this fits
 
@@ -103,6 +108,12 @@ result = await client.extract_relations("acme", "red running shoes under $50")
 - [Ontology (information science)](https://en.wikipedia.org/wiki/Ontology_(information_science))
 - [Parse tree](https://en.wikipedia.org/wiki/Parse_tree)
 - [FastAPI documentation](https://fastapi.tiangolo.com/)
+
+## Support TalkingDB
+
+If package-parse-tree saved you time, please [give it a star](https://github.com/TalkingDB/package-parse-tree) ⭐. Stars help other developers find the project.
+
+Found a bug, or a document it gets wrong? [Open an issue](https://github.com/TalkingDB/package-parse-tree/issues/new). We are always here to help and open to a conversation. Explore the TalkingDB applications at [talkingdb.io](https://talkingdb.io/#applications).
 
 ## License
 
