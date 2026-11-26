@@ -1,0 +1,8 @@
+flowchart LR
+    accTitle: Synonym path from ontology node to a matched query
+    accDescr: A node's alternate names become the entity's surface texts. Training combines surface texts, shorthands and the node id into aliases and upserts them into NEL. NEL then matches query text back to the node id, and parse-tree resolves it to a category, instance or attribute.
+    A["ontology node<br>alternate_names"] --> B["EntityModel<br>surface_texts"]
+    B --> C["aliases = surface_texts<br>+ shorthands + node_id"]
+    C -- "POST /ner/train" --> D["NEL upsert_entity()"]
+    D --> E["NEL matches query text<br>to node_id"]
+    E --> F["parse-tree resolves<br>Category, Instance, Attribute"]
