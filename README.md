@@ -6,9 +6,9 @@ An ontology driven natural language query parser. Given an ontology of types, in
 ![Port 8093](https://img.shields.io/badge/port-8093-555)
 
 <p align="center">
-  <img src="docs/images/demo.gif" alt="A short animated tour of package-parse-tree: what it is, how to start, and which page to read next">
+  <img src="docs/images/demo.gif" alt="Animated demo of a real run: a small nut ontology is built, then 'm10 316 hex nut' and the misspelt 'haxagon nut m8 316' are parsed into Category nut, Instance hex-nut, and the attributes thread-size and material">
 </p>
-<p align="center"><sub>A short tour: what it is, how to start, and what to read next.</sub></p>
+<p align="center"><sub>A real run at <code>d820de9</code> on 27 Nov 2026, with the named entity linker in the same process instead of over HTTP. The ontology is built the way <code>tests/unit/services/parsing/test_sentence.py</code> builds one.</sub></p>
 
 | Start here | Go deeper |
 | :--- | :--- |
