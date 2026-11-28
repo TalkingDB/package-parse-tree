@@ -99,7 +99,7 @@ Operators: `eq`, `ge`, `gt`, `le`, `lt`, `in`. Edge fields are limited to an all
 ```python
 from talkingdb_pt.client import PTClient
 
-client = PTClient()                       # CLIENT_MODE=direct by default
+client = PTClient()  # CLIENT_MODE=direct by default
 tree = await client.extract_relations("demo", "cell phones under 20000 rupees")
 ```
 
