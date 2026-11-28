@@ -1,0 +1,15 @@
+flowchart TB
+    accTitle: Steps inside parse_input
+    accDescr: The query is lower cased and sent to NEL. Matches become NER ids. Categories and instances are resolved, object attributes and numeric literals with units and comparators are collected, attributes are attached to instances or categories, categories are scored by similarity to the query, and the groups are sorted by score.
+    Q["user_query"] --> L["lower case"]
+    L --> N["NEL extract_and_link<br>(HTTP to NEL_SERVER)"]
+    N --> I["build NER ids"]
+    I --> C["categories and instances<br>parsing/category.py"]
+    I --> O["object attributes<br>parsing/object_attrs.py"]
+    I --> LIT["numbers, units, comparators<br>parsing/literal.py"]
+    O --> AFT["attribute filter table"]
+    LIT --> AFT
+    C --> G["group: Category, Instances,<br>Attributes"]
+    AFT --> G
+    G --> S["score each category<br>against the query, sort"]
+    S --> OUT["NLOutput"]

@@ -1,0 +1,14 @@
+sequenceDiagram
+    accTitle: Building and querying an ontology
+    accDescr: The caller registers a type, writes nodes, trains NEL, then parses a query. Parse-tree calls NEL during training and during parsing.
+    autonumber
+    participant You
+    participant PT as parse-tree :8093
+    participant NEL as NEL :8092
+    You->>PT: POST /ontology/types
+    You->>PT: POST /ontology/data (nodes)
+    You->>PT: POST /ner/train
+    PT->>NEL: upsert each node's aliases
+    You->>PT: POST /extract/relations {"user_query": ...}
+    PT->>NEL: extract and link
+    PT-->>You: NLOutput tree

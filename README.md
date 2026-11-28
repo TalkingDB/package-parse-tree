@@ -1,49 +1,57 @@
-# package-parse-tree
+<!-- short-readme -->
+<h1 align="center">package-parse-tree</h1>
 
-An ontology-driven natural-language query parser. Given a type/instance/attribute
-ontology (of any domain), it parses free-text queries into structured
-knowledge-graph queries: resolving categories and instances, disambiguating by
-graph proximity, and extracting typed attribute filters (including numeric
-values with units and comparators).
+<p align="center"><b>Turn a free text query into a structured query your catalogue understands.</b></p>
 
-This package is domain-agnostic TalkingDB infrastructure: it has no built-in
-concept of "products," "ecommerce," or any other specific domain. Domain-specific
-vocabulary and use cases (for example, ecommerce product search) are owned by
-the `module-*` repos that consume this package, not by the package itself.
+<p align="center"><a href="#try-it">Try it</a> · <a href="docs/architecture.md">How it works</a> · <a href="docs/usage-and-examples.md">Usage and examples</a> · <a href="docs/troubleshooting.md">Troubleshooting</a> · <a href="docs/reference.md">Full reference</a></p>
 
-## Status
+<p align="center"><a href="https://github.com/TalkingDB/package-parse-tree/stargazers"><img src="https://img.shields.io/github/stars/TalkingDB/package-parse-tree?style=social" alt="GitHub stars"></a></p>
 
-All 6 build milestones are implemented and tested (129 service/API tests, plus
-a `PTClient` dual-mode client with its own test coverage). See
-`talkingdb_pt/services/kg/store.py` for the ontology/knowledge-graph store
-(built on `base-tdb-models`' `EntityModel`, no external graph database
-required).
+<p align="center">
+  <img src="docs/images/demo.gif" alt="Animated demo of a real run: a small nut ontology is built, then 'm10 316 hex nut' and the misspelt 'haxagon nut m8 316' are parsed into Category nut, Instance hex-nut, and the attributes thread-size and material">
+</p>
+<p align="center"><sub>A real run at <code>d820de9</code> on 27 Nov 2026, with the named entity linker in the same process instead of over HTTP. The ontology is built the way <code>tests/unit/services/parsing/test_sentence.py</code> builds one.</sub></p>
 
-## Client
+Describe a domain as an [ontology](https://en.wikipedia.org/wiki/Ontology_(information_science)) of categories, instances and attributes, and parse-tree turns "m10 316 hex nut" into category, product and attribute filters, with units and comparators, ready for a [knowledge graph](https://en.wikipedia.org/wiki/Knowledge_graph) query.
 
-`talkingdb_pt.client.PTClient` gives callers a single interface that works two
-ways, controlled by the `CLIENT_MODE` env var (defaults to `direct`):
+## What it does
 
-- **DIRECT mode**: calls the same service functions the API routers call,
-  in-process. No server needed, useful when this package is embedded as a
-  library inside another service (e.g. a future `module-ecommerce-ai`).
-- **API mode**: calls a deployed package-parse-tree service over HTTP. Set
-  `CLIENT_MODE=api` and `PT_HOST` to the deployed base URL.
+- **Store** your ontology: [register a type](docs/usage-and-examples.md#1-register-a-type) and [write nodes](docs/usage-and-examples.md#2-write-nodes).
+- **Teach** [package-named-entity-linker](https://github.com/TalkingDB/package-named-entity-linker) the names, synonyms included ([how](docs/usage-and-examples.md#3-teach-nel-the-names)).
+- **Parse** a query into a Category, Instance, Attribute, Value tree ([example](docs/usage-and-examples.md#4-parse-a-query)) and [filter the graph](docs/usage-and-examples.md#5-filter-the-knowledge-graph) with it.
 
-```python
-from talkingdb_pt.client import PTClient
+## Try it
 
-client = PTClient()  # direct mode by default
-result = await client.extract_relations("acme", "red running shoes under $50")
-```
-
-## Development
-
-```
-make sync MODE=git      # or MODE=local for editable base-tdb-* checkouts
+```bash
+make sync MODE=git
 poetry install
 make test
-make local               # run with hot reload
+make local             # API on http://localhost:8093, Swagger at /docs
 ```
 
-See `Makefile` for the full list of targets.
+Anything that extracts text needs a running [package-named-entity-linker](https://github.com/TalkingDB/package-named-entity-linker) on port 8092.
+
+## Where it fits
+
+Used by [module-ecommerce-ai](https://github.com/TalkingDB/module-ecommerce-ai) and [package-search-trainer](https://github.com/TalkingDB/package-search-trainer); asks [package-named-entity-linker](https://github.com/TalkingDB/package-named-entity-linker) what a query contains.
+
+## Learn more
+
+| Page | Read it to |
+| :--- | :--- |
+| [How it works](docs/architecture.md) | see the parts and how data moves |
+| [Usage and examples](docs/usage-and-examples.md) | copy working examples |
+| [Troubleshooting](docs/troubleshooting.md) | fix a problem |
+| [Full reference](docs/reference.md) | read everything that used to be on this page |
+| [All docs](docs/README.md) | see every page |
+
+## Support TalkingDB
+
+If package-parse-tree saved you time, please [give it a star](https://github.com/TalkingDB/package-parse-tree) ⭐. Stars help other developers find the project.
+
+Found a bug, or a document it gets wrong? [Open an issue](https://github.com/TalkingDB/package-parse-tree/issues/new). We are always here to help and open to a conversation. Explore the TalkingDB applications at [talkingdb.io](https://talkingdb.io/#applications).
+
+## License
+
+> [!NOTE]
+> This repository does not have a LICENSE file yet. Most TalkingDB repositories are licensed under [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html); until a LICENSE file is added here, no license is granted by this README.
